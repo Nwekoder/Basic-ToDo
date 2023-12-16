@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>To Do App</title>
+		<script src="alpinejs/alpine.js" defer></script>
+		<script src="unocss/unocss.js"></script>
+		<link rel="stylesheet" href="unocss/unocss.css" />
+		<style>
+			[un-cloak] {
+				display: none;
+			}
+		</style>
+	</head>
+	<body un-cloak>
+		<div
+			class="h-screen flex items-center justify-center flex-col"
+			x-data="{
+        tasks: ['Cuci Piring', 'Beli Tabung Gas'],
+        progress: [],
+        done: [],
+        showFormModal: false
+    }"
+		>
+			<h1 class="text-6xl font-bold mb-8">ToDo App</h1>
+
+			<div x-show="showFormModal" class="fixed top-0 left-0 bg-neutral-900 bg-opacity-50 z-100 w-full h-screen flex items-center justify-center">
+				<div class="bg-white rounded-md w-80 p-4">
+					<h5 class="text-2xl font-bold mb-4">New Task</h5>
+
+					<form @submit.prevent="tasks.push(task_name); task_name = ''" x-data="{task_name: ''}">
+						<input type="text" placeholder="Task Name" x-model="task_name" class="px-2 py-1 border rounded-md w-full mb-4" />
+						<button type="submit" class="w-full text-sm bg-#1e1e1e rounded-md text-white py-1.5 mb-2">Add</button>
+						<button type="button" @click="showFormModal = false" class="w-full text-sm border border-#1e1e1e rounded-md py-1.5">Close</button>
+					</form>
+				</div>
+			</div>
+
+			<div class="grid grid-cols-3 w-11/12 gap-2">
+				<div class="shadow-md border rounded-md min-h-56 px-6 py-4">
+					<h5 class="text-2xl font-bold mb-4">Tasks</h5>
+
+					<div class="flex flex-col gap-2">
+						<button type="button" @click="showFormModal = true" class="border border-#1e1e1e rounded-md p-2 border-dashed">
+                            Add New Task
+                        </button>
+						<template x-for="(t, i) in tasks">
+							<div class="border rounded-md flex items-center justify-between p-2">
+								<p x-text="t"></p>
+								<div class="flex gap-1 items-center">
+									<button @click="progress.push(tasks[i]); tasks.splice(i, 1)" class="px-2 py-1 text-xs bg-#1e1e1e rounded-md text-white" type="button">In-Progress</button>
+									<button @click="done.push(tasks[i]); tasks.splice(i, 1);" class="px-2 py-1 text-xs bg-#1e1e1e rounded-md text-white" type="button">Done</button>
+									<button @click="tasks.splice(i, 1);" class="px-2 py-1 text-xs bg-#1e1e1e rounded-md text-white" type="button">Delete</button>
+								</div>
+							</div>
+						</template>
+					</div>
+				</div>
+				<div class="shadow-md border rounded-md min-h-56 px-6 py-4">
+					<h5 class="text-2xl font-bold mb-4">In-Progress</h5>
+
+					<div class="flex flex-col gap-2">
+						<template x-for="(t, i) in progress">
+							<div class="border rounded-md flex items-center justify-between p-2">
+								<p x-text="t"></p>
+								<div class="flex gap-1 items-center">
+									<button @click="done.push(progress[i]); progress.splice(i, 1);" class="px-2 py-1 text-xs bg-#1e1e1e rounded-md text-white" type="button">Done</button>
+									<button @click="progress.splice(i, 1);" class="px-2 py-1 text-xs bg-#1e1e1e rounded-md text-white" type="button">Delete</button>
+								</div>
+							</div>
+						</template>
+					</div>
+				</div>
+				<div class="shadow-md border rounded-md min-h-56 px-6 py-4">
+					<h5 class="text-2xl font-bold mb-4">Done</h5>
+
+					<div class="flex flex-col gap-2">
+						<template x-for="(t, i) in done">
+							<div class="border rounded-md flex items-center justify-between p-2">
+								<p x-text="t"></p>
+								<div class="flex gap-1 items-center">
+									<button @click="done.splice(i, 1);" class="px-2 py-1 text-xs bg-#1e1e1e rounded-md text-white" type="button">Delete</button>
+								</div>
+							</div>
+						</template>
+					</div>
+				</div>
+			</div>
+		</div>
+	</body>
+</html>
